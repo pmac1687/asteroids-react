@@ -1,0 +1,26 @@
+.App {
+  height: 100vh;
+  width: 100vw;
+  display: grid;
+}
+/* spaceship */
+#ship {
+  background-color: blue;
+  width: 15vw;
+  height: 10vw;
+  display: none;
+}
+#ship-cont {
+  width: 100vw;
+  height:100vh;
+}
+/* game menu */
+#game-menu {
+  justify-self: center;
+  align-self: center;
+  width: 50vw;
+  height: 50vw;
+  background-color: blueviolet;
+  text-align: center;
+  display: grid;
+}
