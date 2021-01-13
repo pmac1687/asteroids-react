@@ -9,12 +9,17 @@
   width: 15vw;
   height: 10vw;
   display: none;
+  top: 0px;
 }
 #ship-cont {
   width: 100vw;
   height:100vh;
 }
 /* game menu */
+#game-menu-cont {
+  display: flex;
+  justify-content: center;
+}
 #game-menu {
   justify-self: center;
   align-self: center;
@@ -23,4 +28,11 @@
   background-color: blueviolet;
   text-align: center;
   display: grid;
+}
+/*enemy*/
+#enemy {
+  width: 100px;
+  height: 100px;
+  background-color: red;
+  position: relative;
 }

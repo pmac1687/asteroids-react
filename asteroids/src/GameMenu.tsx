@@ -19,7 +19,7 @@ function GameMenu(props: AppProps) {
         }
     }, [props.show]);
     return (
-        <div>
+        <div id="game-menu-cont">
             <div id="game-menu">
                 <div>
                     <h1>Asteroids</h1>
@@ -28,9 +28,10 @@ function GameMenu(props: AppProps) {
                     <h3>Created By: Patrick McDermott</h3>
                 </div>
                 <div>
-                    <p>A web based game built from scratch using React and Typescript and hosted on AWS.</p>
+                    <p>
+                        A web based game built from scratch using React and Typescript, with testing and hosted on AWS.
+                    </p>
                 </div>
-                props.onClick
                 <div>
                     <button type="submit" onClick={props.onClick}>
                         Start Game
