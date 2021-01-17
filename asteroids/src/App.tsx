@@ -40,12 +40,11 @@ function App() {
     }
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     function moveEnemies(ids: NodeJS.Timeout) {
-        const arr = document.getElementsByClassName('enemy') as HTMLCollectionOf<HTMLElement>;
+        let arr = document.getElementsByClassName('enemy') as HTMLCollectionOf<HTMLElement>;
         setGameOver(true);
         console.log(ids);
         console.log(gameOver);
         /// dont lose this console.log or else prop assign doesnt work?
-        console.log('bebefore', arr[0].style);
         let x;
         for (x in arr) {
             const ele = arr[x];
@@ -53,12 +52,16 @@ function App() {
                 console.log('title', ele.title);
                 if (getEnemySpeed(ele) === '4') {
                     if (enemyOnScreen(ele, ids, 'right', arr)) {
-                        moveEnemyRight(ele);
+                        if (ele) {
+                            moveEnemyRight(ele);
+                        }
                     }
                 }
                 if (getEnemySpeed(ele) === '-4') {
                     if (enemyOnScreen(ele, ids, 'left', arr)) {
-                        moveEnemyLeft(ele);
+                        if (ele) {
+                            moveEnemyLeft(ele);
+                        }
                     }
                 }
             } else console.log('bad HTMLElement', ele);
@@ -81,17 +84,34 @@ function App() {
             if (parseInt(ele.style.left.replace('px', ''), 10) > 1000) {
                 console.log(arr);
                 ele.remove();
-                clearInterval(ids);
-                return;
-            } else return true;
-        }
-        if (direction === 'left') {
-            if (parseInt(ele.style.left.replace('px', ''), 10) < 1000) {
-                ele.remove();
-                clearInterval(ids);
+                killEnemyAdd2More();
+                ///clearInterval(ids);
                 return false;
             } else return true;
         }
+        if (direction === 'left') {
+            if (parseInt(ele.style.left.replace('px', ''), 10) < -100) {
+                ele.remove();
+                return false;
+            } else return true;
+        }
+    }
+    function killEnemyAdd2More() {
+        const cont = document.getElementById('enemy-cont');
+        const news = document.createElement('div');
+        Object.assign(news.style, {
+            left: 0,
+            backgroundColor: 'black',
+            width: '100px',
+            height: '100px',
+        });
+        Object.assign(news, {
+            id: `enemy${enemyCount}`,
+            title: '4',
+            className: 'enemy',
+            key: `${enemyArray.length}`,
+        });
+        cont?.appendChild(news);
     }
     function moveEnemyLeft(ele: HTMLElement) {
         console.log('before', ele.style);
@@ -141,7 +161,6 @@ function App() {
         return [leftSideEnemy, rightSideEnemy];
     }
     function populateEnenmies() {
-        setEnemyArray([]);
         const arr = enemyArray;
         const [leftCoord, rightCoord] = getRandStartCoords();
         const [leftSideEnemy, rightSideEnemy] = getEnemyJSX(leftCoord, rightCoord);
