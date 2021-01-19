@@ -9679,6 +9679,11 @@ react-is@^17.0.1:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-17.0.1.tgz#5b3531bd76a645a4c9fb6e693ed36419e3301339"
   integrity sha512-NAnt2iGDXohE5LI7uBnLnqvLQMtzhkiAOLXTmv+qnF9Ky7xAPcX8Up/xWIhxvLVGJvuLiNc4xQLtuqDRzb4fSA==
 
+react-parallax-mousemove@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/react-parallax-mousemove/-/react-parallax-mousemove-1.1.0.tgz#5f6738140cf87ca386f71beaa531397d7ff3d1ad"
+  integrity sha1-X2c4FAz4fKOG9xvqpTE5fX/z0a0=
+
 react-refresh@^0.8.3:
   version "0.8.3"
   resolved "https://registry.yarnpkg.com/react-refresh/-/react-refresh-0.8.3.tgz#721d4657672d400c5e3c75d063c4a85fb2d5d68f"

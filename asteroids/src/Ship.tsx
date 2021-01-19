@@ -8,6 +8,11 @@ import './App.css';
 function Ship() {
     const [xCoord, setXCoord] = useState(0);
     const [yCoord, setYCoord] = useState(0);
+    const [yOffSet, setYOffSet] = useState(0);
+    const [xOffSet, setXOffSet] = useState(0);
+
+    ///const [yOffSet2, setYOffSet2] = useState(0);
+
     useEffect(() => {
         window.addEventListener('keydown', moveShip);
         console.log(2);
@@ -19,11 +24,21 @@ function Ship() {
     const moveShip = (event: KeyboardEvent) => {
         console.log(event.key);
         ///down arrow logic
+        const ships = document.getElementById('ship');
+        const app = document.getElementById('App');
         if (event.key === 'ArrowDown') {
-            const ships = document.getElementById('ship');
-
             if (ships !== null) {
                 ships.style.position = 'relative';
+                ///const board = document.getElementById('game-board');
+                ///setYOffSet2(yOffSet2 - 10);
+                /*if (board) {
+                    board.style.transform = `translateY(${yOffSet2}px)`;
+                }*/
+                console.log(app);
+                setYOffSet(yOffSet - 40);
+                if (app) {
+                    app.style.backgroundPositionY = `${yOffSet}px`;
+                }
                 const increase = xCoord + 30;
                 setXCoord(increase);
                 console.log('xcoord after', xCoord);
@@ -34,11 +49,13 @@ function Ship() {
         }
         ///up arrow logic
         if (event.key === 'ArrowUp') {
-            const ships = document.getElementById('ship');
-
             if (ships !== null) {
                 ships.style.position = 'relative';
                 const increase = xCoord - 30;
+                setYOffSet(yOffSet + 40);
+                if (app) {
+                    app.style.backgroundPositionY = `${yOffSet}px`;
+                }
                 setXCoord(increase);
                 console.log('xcoord after', xCoord);
                 ships.style.top = `${increase}px`;
@@ -48,11 +65,13 @@ function Ship() {
         }
         ///right arrow logic
         if (event.key === 'ArrowRight') {
-            const ships = document.getElementById('ship');
-
             if (ships !== null) {
                 ships.style.position = 'relative';
                 const increase = yCoord + 30;
+                setXOffSet(xOffSet - 40);
+                if (app) {
+                    app.style.backgroundPositionX = `${xOffSet}px`;
+                }
                 setYCoord(increase);
                 console.log('xcoord after', yCoord);
                 ships.style.left = `${increase}px`;
@@ -61,11 +80,13 @@ function Ship() {
             }
         }
         if (event.key === 'ArrowLeft') {
-            const ships = document.getElementById('ship');
-
             if (ships !== null) {
                 ships.style.position = 'relative';
                 const increase = yCoord - 30;
+                setXOffSet(xOffSet + 40);
+                if (app) {
+                    app.style.backgroundPositionX = `${xOffSet}px`;
+                }
                 setYCoord(increase);
                 console.log('xcoord after', yCoord);
                 ships.style.left = `${increase}px`;
