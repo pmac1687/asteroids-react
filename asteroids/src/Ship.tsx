@@ -2,16 +2,21 @@
 /* eslint-disable react/react-in-jsx-scope */
 ////import { useState } from 'react';
 ///import ReactDOM from 'react';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import './App.css';
 
 function Ship() {
-    const [xCoord, setXCoord] = useState(0);
-    const [yCoord, setYCoord] = useState(0);
-    const [yOffSet, setYOffSet] = useState(0);
-    const [xOffSet, setXOffSet] = useState(0);
-
-    ///const [yOffSet2, setYOffSet2] = useState(0);
+    ///const [yOffSet, setYOffSet] = useState(0);
+    ///const [xOffSet, setXOffSet] = useState(0);
+    ///const [yCoord, setYCoord] = useState(500);
+    ///const [xCoord, setXCoord] = useState(200);
+    const xOffSet = useRef(0);
+    const xCoord = useRef(100);
+    ///const xCoord2 = useRef(300)
+    const yCoord = useRef(-300);
+    ///const yCoord2 = useRef(575);
+    const yOffSet = useRef(0);
+    ///const [yOffSet, setYOffSet2] = useState(0);
 
     useEffect(() => {
         window.addEventListener('keydown', moveShip);
@@ -20,85 +25,74 @@ function Ship() {
         return function cleanup() {
             window.removeEventListener('keydown', moveShip);
         };
-    }, [xCoord, yCoord]);
+    }, [xCoord.current, yCoord.current]);
     const moveShip = (event: KeyboardEvent) => {
-        console.log(event.key);
         ///down arrow logic
         const ships = document.getElementById('ship');
         const app = document.getElementById('App');
         if (event.key === 'ArrowDown') {
             if (ships !== null) {
-                ships.style.position = 'relative';
-                ///const board = document.getElementById('game-board');
-                ///setYOffSet2(yOffSet2 - 10);
-                /*if (board) {
-                    board.style.transform = `translateY(${yOffSet2}px)`;
-                }*/
-                console.log(app);
-                setYOffSet(yOffSet - 40);
+                ///yCoord should increase Yoffset should decrease
+                yOffSet.current -= 30;
                 if (app) {
-                    app.style.backgroundPositionY = `${yOffSet}px`;
+                    app.style.position = 'relative';
+                    app.style.backgroundPositionY = `${yOffSet.current}px`;
                 }
-                const increase = xCoord + 30;
-                setXCoord(increase);
-                console.log('xcoord after', xCoord);
-                ships.style.top = `${increase}px`;
-                console.log('inc after adj', increase);
-                console.log('top after adj', ships.style.top);
+                yCoord.current += 30;
+                if (ships) {
+                    ships.style.position = 'relative';
+                    ships.style.top = `${yCoord.current}px`;
+                }
             }
         }
         ///up arrow logic
         if (event.key === 'ArrowUp') {
             if (ships !== null) {
-                ships.style.position = 'relative';
-                const increase = xCoord - 30;
-                setYOffSet(yOffSet + 40);
+                ///yCoord should decrease yOffset increase
+                yOffSet.current += 30;
                 if (app) {
-                    app.style.backgroundPositionY = `${yOffSet}px`;
+                    app.style.position = 'relative';
+                    app.style.backgroundPositionY = `${yOffSet.current}px`;
                 }
-                setXCoord(increase);
-                console.log('xcoord after', xCoord);
-                ships.style.top = `${increase}px`;
-                console.log('inc after adj', increase);
-                console.log('top after adj', ships.style.top);
+                yCoord.current -= 30;
+                if (ships) {
+                    ships.style.position = 'relative';
+                    ships.style.top = `${yCoord.current}px`;
+                }
             }
         }
         ///right arrow logic
         if (event.key === 'ArrowRight') {
             if (ships !== null) {
-                ships.style.position = 'relative';
-                const increase = yCoord + 30;
-                setXOffSet(xOffSet - 40);
+                ///xCoord should increase xOffset decrease
+                xOffSet.current -= 30;
                 if (app) {
-                    app.style.backgroundPositionX = `${xOffSet}px`;
+                    app.style.position = 'relative';
+                    app.style.backgroundPositionX = `${xOffSet.current}px`;
                 }
-                setYCoord(increase);
-                console.log('xcoord after', yCoord);
-                ships.style.left = `${increase}px`;
-                console.log('inc after adj', increase);
-                console.log('top after adj', ships.style.top);
+                xCoord.current += 30;
+                if (ships) {
+                    ships.style.position = 'relative';
+                    ships.style.left = `${xCoord.current}px`;
+                }
             }
         }
         if (event.key === 'ArrowLeft') {
             if (ships !== null) {
-                ships.style.position = 'relative';
-                const increase = yCoord - 30;
-                setXOffSet(xOffSet + 40);
+                ///xCoord should decrease xOffset increase
+                xOffSet.current += 30;
                 if (app) {
-                    app.style.backgroundPositionX = `${xOffSet}px`;
+                    app.style.position = 'relative';
+                    app.style.backgroundPositionX = `${xOffSet.current}px`;
                 }
-                setYCoord(increase);
-                console.log('xcoord after', yCoord);
-                ships.style.left = `${increase}px`;
-                console.log('inc after adj', increase);
-                console.log('top after adj', ships.style.top);
+                xCoord.current -= 30;
+                if (ships) {
+                    ships.style.position = 'relative';
+                    ships.style.left = `${xCoord.current}px`;
+                }
             }
         }
     };
-    return (
-        <div title="hello" id="ship-cont">
-            <div id="ship">hello</div>
-        </div>
-    );
+    return <div id="ship">hello</div>;
 }
 export default Ship;

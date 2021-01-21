@@ -1,48 +1,38 @@
 /* eslint-disable prefer-const */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react/react-in-jsx-scope */
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 ///import ReactDOM from 'react';
 import './App.css';
 import GameMenu from './GameMenu';
 import Ship from './Ship';
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import ParallaxMouseMove from 'react-parallax-mousemove';
-import space from './images/space.jpeg';
-import dMap from './images/depth-mapOP85.jpg';
 ///import GameMenu from './App';
 
 function App() {
     ///come in and pass random properties for speen andirection and spawn blah when instantiating
     const [show, setShow] = useState(true);
-    const [enemyCount, setEnemyCount] = useState(4);
+    ///const [enemyCount, setEnemyCount] = useState(4);
+    const counts = useRef(0);
     ///const [enemyArray, setEnemyArray] = useState<JSX.Element[]>([<div key="2">hello</div>]);
     ///const hello = ['helllo', 'goodbye', 'bye'];
     function onClick() {
         setShow(false);
         ///const shipRect = document.getElementById('ship');
-        const shipAdj = document.getElementById('ship-cont');
+        const shipAdj = document.getElementById('ship');
         const gMenu = document.getElementById('game-menu');
         const app = document.getElementById('App');
-        const app2 = document.getElementById('App2');
-        const app3 = document.getElementById('App3');
         const gBoard = document.getElementById('game-board');
         const border = document.getElementById('game-board-border');
         if (border) {
             border.style.display = 'block';
         }
-        if (app2) {
-            app2.style.backgroundImage = `url(${space})`;
-        }
-        if (app3) {
-            app3.style.backgroundImage = `url(${dMap})`;
-        }
         if (app) {
             app.style.display = 'grid';
-            app.style.backgroundImage = `url(${space})`;
+            app.style.backgroundImage =
+                'url(https://wonderfulengineering.com/wp-content/uploads/2014/04/space-wallpapers-15.jpg)';
             app.style.gridTemplateColumns = 'auto auto auto';
             app.style.gridTemplateRows = 'auto auto auto';
+            app.style.position = 'relative';
             ///app.style.opacity = '.1';
             ///app.style.gridTemplateAreas = '... .board. ...';
         }
@@ -54,7 +44,7 @@ function App() {
         }
         if (shipAdj) {
             shipAdj.style.display = 'block';
-            shipAdj.style.placeSelf = 'center';
+            shipAdj.style.position = 'relative';
         }
         populateEnenmies();
         startInterval();
@@ -66,10 +56,8 @@ function App() {
         }, 18);
     }
     // eslint-disable-next-line @typescript-eslint/no-empty-function
-    function moveEnemies(ids: NodeJS.Timeout) {
+    function moveEnemies(_ids: NodeJS.Timeout) {
         let arr = document.getElementsByClassName('enemy') as HTMLCollectionOf<HTMLElement>;
-        console.log(arr.length);
-        console.log('ids ignore ', ids);
         let x;
         if (arr) {
             for (x in arr) {
@@ -79,17 +67,21 @@ function App() {
                 const ele = arr[x];
                 if (ele !== undefined) {
                     if (ele.title !== undefined) {
-                        if (getEnemySpeed(ele, ids) === '4') {
-                            if (enemyOnScreen(ele, ids, 'right', arr)) {
+                        console.log(ele.style.right);
+
+                        if (getEnemySpeed(ele) === '4') {
+                            if (enemyOnScreen(ele, 'right', _ids)) {
                                 if (ele) {
                                     moveEnemyRight(ele);
+                                    checkForCollision(ele, _ids);
                                 }
                             }
                         }
-                        if (getEnemySpeed(ele, ids) === '-4') {
-                            if (enemyOnScreen(ele, ids, 'left', arr)) {
+                        if (getEnemySpeed(ele) === '-4') {
+                            if (enemyOnScreen(ele, 'left', _ids)) {
                                 if (ele) {
                                     moveEnemyLeft(ele);
+                                    checkForCollision(ele, _ids);
                                 }
                             }
                         }
@@ -97,30 +89,41 @@ function App() {
                 }
             }
         }
-        console.log('ids ignore', ids);
+        setShow(true);
         ///return clearInterval(ids);
     }
-    function getEnemySpeed(ele: HTMLElement, ids: NodeJS.Timeout) {
-        if (ele.title) {
-            return ele.title;
-        } else {
-            console.log(ids);
-            ///clearInterval(ids);
+    function checkForCollision(ele: HTMLElement, _ids: NodeJS.Timeout) {
+        console.log(ele);
+        const ship = document.getElementById('ship');
+        if (ship) {
+            const shipRect = ship.getBoundingClientRect();
+            if (ele) {
+                const enemyRect = ele.getBoundingClientRect();
+                const checkColl = !(
+                    shipRect.right < enemyRect.left ||
+                    shipRect.left > enemyRect.right ||
+                    shipRect.bottom < enemyRect.top ||
+                    shipRect.top > enemyRect.bottom
+                );
+                if (checkColl) {
+                    console.log('colllision!!!', ele, ship);
+                    clearInterval(_ids);
+                }
+            }
         }
     }
-    function enemyOnScreen(
-        ele: HTMLElement,
-        ids: NodeJS.Timeout,
-        direction: string,
-        arr: string | [] | HTMLCollectionOf<HTMLElement>,
-    ) {
+    function getEnemySpeed(ele: HTMLElement) {
+        if (ele.title) {
+            return ele.title;
+        }
+    }
+    function enemyOnScreen(ele: HTMLElement, direction: string, _ids: NodeJS.Timeout) {
         if (direction === 'right') {
             if (parseInt(ele.style.left.replace('px', ''), 10) > 1500) {
                 ele.remove();
-                console.log(ids);
-                if (arr.length < 50) {
+                if (document.getElementsByClassName('enemy').length < 10) {
                     populateEnenmies();
-                }
+                } else clearInterval(_ids);
                 ///clearInterval(ids);
                 return false;
             } else return true;
@@ -128,9 +131,9 @@ function App() {
         if (direction === 'left') {
             if (parseInt(ele.style.left.replace('px', ''), 10) < 450) {
                 ele.remove();
-                if (arr.length < 50) {
+                if (document.getElementsByClassName('enemy').length < 10) {
                     populateEnenmies();
-                }
+                } else clearInterval(_ids);
                 return false;
             } else return true;
         }
@@ -138,23 +141,34 @@ function App() {
     function moveEnemyLeft(ele: HTMLElement) {
         Object.assign(ele.style, {
             left: `${parseInt(ele.style.left, 10) - 5}px`,
+            right: `${parseInt(ele.style.right, 10) - 5}px`,
         });
     }
     function moveEnemyRight(ele: HTMLElement) {
         Object.assign(ele.style, {
             left: `${parseInt(ele.style.left, 10) + 5}px`,
+            right: `${parseInt(ele.style.right, 10) + 5}px`,
         });
     }
     function getRandStartCoords() {
         ///vh=65 is max for randowm generation?
-        const leftCoord = Math.floor(Math.random() * (80 - 10) + 10);
-        const rightCoord = Math.floor(Math.random() * (70 - 10) + 10);
+        const leftCoord = Math.floor(Math.random() * (500 - 1) + 1);
+        const rightCoord = Math.floor(Math.random() * (500 - 1) + 1);
         return [leftCoord, rightCoord];
     }
+    function getRandSize() {
+        const leftSize = Math.floor(Math.random() * (30 - 5) + 5);
+        const rightSize = Math.floor(Math.random() * (30 - 5) + 5);
+        return [leftSize, rightSize];
+    }
     function getEnemyJSX() {
-        const enemy1 = `enemy${enemyCount}`;
-        const enemy2 = `enemy${enemyCount + 1}`;
+        const enemy1 = `enemy${counts.current}`;
+        const enemy2 = `enemy${counts.current + 1}`;
         const leftSideEnemy = document.createElement('div');
+        const eSize1 = getRandSize();
+        const eSize2 = getRandSize();
+        const top1 = getRandStartCoords()[0];
+        const top2 = getRandStartCoords()[0];
         Object.assign(leftSideEnemy, {
             id: { enemy1 },
             title: '-4',
@@ -163,11 +177,13 @@ function App() {
         });
         Object.assign(leftSideEnemy.style, {
             backgroundColor: 'black',
-            width: '10px',
-            height: '10px',
+            width: `${eSize1[0]}px`,
+            height: `${eSize1[1]}px`,
             position: 'fixed',
             left: '1400px',
-            top: `${getRandStartCoords()[0]}%`,
+            top: `${top1}px`,
+            right: `${200 + eSize1[0]}px`,
+            bottom: `${top2 + eSize1[1]}px`,
         });
         const rightSideEnemy = document.createElement('div');
         Object.assign(rightSideEnemy, {
@@ -178,24 +194,26 @@ function App() {
         });
         Object.assign(rightSideEnemy.style, {
             backgroundColor: 'black',
-            width: '10px',
-            height: '10px',
+            width: `${eSize2[0]}px`,
+            height: `${eSize2[1]}px`,
             position: 'fixed',
             left: '200px',
-            top: `${getRandStartCoords()[0]}%`,
+            top: `${top2}px`,
+            right: `${200 + eSize2[0]}px`,
+            bottom: `${top2 + eSize2[1]}px`,
         });
 
         return [leftSideEnemy, rightSideEnemy];
     }
     function populateEnenmies() {
-        const cont = document.getElementById('game-board');
-        setEnemyCount(document.getElementsByClassName('enemy').length);
+        const cont = document.getElementById('game-board2');
+        ///setEnemyCount(document.getElementsByClassName('enemy').length);
         const [leftSideEnemy, rightSideEnemy] = getEnemyJSX();
         cont?.appendChild(leftSideEnemy);
         cont?.appendChild(rightSideEnemy);
-        const count = enemyCount + 2;
-        console.log('count of enemy inc', count);
-        console.log('enemy count pop enemy', enemyCount);
+        counts.current += 2;
+        console.log('count of enemy inc', counts);
+        console.log('enemy count pop enemy', counts);
     }
     return (
         <div className="App">
@@ -208,6 +226,7 @@ function App() {
                 <div id="game-board-border"></div>
                 <div id="game-board-border"></div>
                 <div id="game-board">
+                    <div id="game-board2"></div>
                     <Ship />
                 </div>
                 <div id="game-board-border"></div>
