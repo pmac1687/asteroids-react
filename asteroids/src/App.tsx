@@ -8,6 +8,7 @@ import './App.css';
 import GameMenu from './GameMenu';
 import Ship from './Ship';
 ///import GameMenu from './App';
+import shipAll from './images/Spaceship_all.png';
 
 const colors = ['#08F7FE', '#09FBD3', '#7122FA', '#FF2281', '#011FFD', '#FDF200', '#13CA91', '#FFFF66'];
 
@@ -56,6 +57,9 @@ function App() {
         if (shipAdj) {
             shipAdj.style.display = 'block';
             shipAdj.style.position = 'relative';
+            shipAdj.style.top = '-300px';
+            shipAdj.style.left = '100px';
+            shipAdj.style.backgroundImage = `url(${shipAll})`;
         }
         populateEnenmies();
         startInterval();
@@ -167,9 +171,9 @@ function App() {
     }
     function enemyOnScreen(ele: HTMLElement, direction: string, _ids: NodeJS.Timeout) {
         if (direction === 'right') {
-            if (parseInt(ele.style.left.replace('px', ''), 10) > 1500) {
+            if (parseInt(ele.style.left.replace('px', ''), 10) > 1350) {
                 ele.remove();
-                if (document.getElementsByClassName('enemy').length < 10) {
+                if (document.getElementsByClassName('enemy').length < 17) {
                     populateEnenmies();
                 }
                 ///clearInterval(ids);
@@ -177,9 +181,9 @@ function App() {
             } else return true;
         }
         if (direction === 'left') {
-            if (parseInt(ele.style.left.replace('px', ''), 10) < 450) {
+            if (parseInt(ele.style.left.replace('px', ''), 10) < 300) {
                 ele.remove();
-                if (document.getElementsByClassName('enemy').length < 10) {
+                if (document.getElementsByClassName('enemy').length < 17) {
                     populateEnenmies();
                 }
                 return false;
@@ -188,8 +192,8 @@ function App() {
     }
     function moveEnemyLeft(ele: HTMLElement) {
         Object.assign(ele.style, {
-            left: `${parseInt(ele.style.left, 10) - 5}px`,
-            right: `${parseInt(ele.style.right, 10) - 5}px`,
+            left: `${parseInt(ele.style.left, 10) - 7}px`,
+            right: `${parseInt(ele.style.right, 10) - 7}px`,
         });
     }
     function moveEnemyRight(ele: HTMLElement) {
@@ -200,8 +204,8 @@ function App() {
     }
     function getRandStartCoords() {
         ///vh=65 is max for randowm generation?
-        const leftCoord = Math.floor(Math.random() * (800 - 100) + 100);
-        const rightCoord = Math.floor(Math.random() * (800 - 100) + 100);
+        const leftCoord = Math.floor(Math.random() * (700 - 130) + 130);
+        const rightCoord = Math.floor(Math.random() * (700 - 130) + 130);
         return [leftCoord, rightCoord];
     }
     function getRandSize() {
@@ -228,7 +232,7 @@ function App() {
             width: `${eSize1[0]}px`,
             height: `${eSize1[1]}px`,
             position: 'fixed',
-            left: '1400px',
+            left: '1350px',
             top: `${top1}px`,
             right: `${200 + eSize1[0]}px`,
             bottom: `${top2 + eSize1[1]}px`,
@@ -245,7 +249,7 @@ function App() {
             width: `${eSize2[0]}px`,
             height: `${eSize2[1]}px`,
             position: 'fixed',
-            left: '200px',
+            left: '300px',
             top: `${top2}px`,
             right: `${200 + eSize2[0]}px`,
             bottom: `${top2 + eSize2[1]}px`,
@@ -273,7 +277,7 @@ function App() {
                     <GameMenu show={show} onClick={onClick} />
                 </div>
                 <div id="game-board-border"></div>
-                <div id="game-board-border-timer">{clock}</div>
+                <div id="game-board-border-title">ASTEROIDS</div>
                 <div id="game-board-border"></div>
                 <div id="game-board-border"></div>
                 <div id="game-board">
@@ -282,8 +286,11 @@ function App() {
                 </div>
                 <div id="game-board-border"></div>
                 <div id="game-board-border"></div>
-                <div id="game-board-border-title">ASTEROIDS</div>
-                <div id="game-board-border"></div>
+                <div id="game-board-border-timer">{clock}</div>
+                <div style={{ display: 'grid' }} id="game-board-border">
+                    <button className="big-button">See Code</button>
+                    <button className="big-button">Reset Game</button>
+                </div>
             </div>
         </div>
     );
