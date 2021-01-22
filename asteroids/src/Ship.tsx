@@ -2,22 +2,24 @@
 /* eslint-disable react/react-in-jsx-scope */
 ////import { useState } from 'react';
 ///import ReactDOM from 'react';
-import { useEffect, useRef } from 'react';
+import { MutableRefObject } from 'react';
+import { useEffect } from 'react';
 import './App.css';
 
-function Ship() {
-    ///const [yOffSet, setYOffSet] = useState(0);
+type ShipProps = {
+    speed: MutableRefObject<number[]>;
+    offSet: MutableRefObject<number[]>;
+    xCoord: MutableRefObject<number>;
+    yCoord: MutableRefObject<number>;
+};
+function Ship({ speed, offSet, xCoord, yCoord }: ShipProps) {
+    ///const [offSet, setoffSet] = useState(0);
     ///const [xOffSet, setXOffSet] = useState(0);
     ///const [yCoord, setYCoord] = useState(500);
     ///const [xCoord, setXCoord] = useState(200);
-    const xOffSet = useRef(0);
-    const xCoord = useRef(100);
     ///const xCoord2 = useRef(300)
-    const yCoord = useRef(-300);
     ///const yCoord2 = useRef(575);
-    const yOffSet = useRef(0);
-    ///const [yOffSet, setYOffSet2] = useState(0);
-
+    ///const [offSet, setoffSet2] = useState(0);
     useEffect(() => {
         window.addEventListener('keydown', moveShip);
         console.log(2);
@@ -26,17 +28,40 @@ function Ship() {
             window.removeEventListener('keydown', moveShip);
         };
     }, [xCoord.current, yCoord.current]);
+    useEffect(() => {
+        window.addEventListener('keyup', decel);
+        console.log(2);
+
+        return function cleanup() {
+            window.removeEventListener('keyup', moveShip);
+        };
+    }, [xCoord.current, yCoord.current]);
+    const decel = (event: KeyboardEvent) => {
+        if (event.code === 'ArrowDown') {
+            speed.current[1] = 6;
+        }
+        if (event.code === 'ArrowUp') {
+            speed.current[1] = -6;
+        }
+        if (event.code === 'ArrowLeft') {
+            speed.current[0] = -6;
+        }
+        if (event.code === 'ArrowRight') {
+            speed.current[1] = -6;
+        }
+    };
     const moveShip = (event: KeyboardEvent) => {
         ///down arrow logic
         const ships = document.getElementById('ship');
         const app = document.getElementById('App');
         if (event.key === 'ArrowDown') {
             if (ships !== null) {
-                ///yCoord should increase Yoffset should decrease
-                yOffSet.current -= 30;
+                ///yCoord should increase offSet should decrease
+                ///offSet.current -= 30;
                 if (app) {
                     app.style.position = 'relative';
-                    app.style.backgroundPositionY = `${yOffSet.current}px`;
+                    offSet.current[1] -= 30;
+                    app.style.backgroundPositionY = `${offSet.current[1]}px`;
                 }
                 yCoord.current += 30;
                 if (ships) {
@@ -48,11 +73,12 @@ function Ship() {
         ///up arrow logic
         if (event.key === 'ArrowUp') {
             if (ships !== null) {
-                ///yCoord should decrease yOffset increase
-                yOffSet.current += 30;
+                ///yCoord should decrease offSet should increase
+                ///offSet.current -= 30;
                 if (app) {
                     app.style.position = 'relative';
-                    app.style.backgroundPositionY = `${yOffSet.current}px`;
+                    offSet.current[1] += 30;
+                    app.style.backgroundPositionY = `${offSet.current[1]}px`;
                 }
                 yCoord.current -= 30;
                 if (ships) {
@@ -64,11 +90,12 @@ function Ship() {
         ///right arrow logic
         if (event.key === 'ArrowRight') {
             if (ships !== null) {
-                ///xCoord should increase xOffset decrease
-                xOffSet.current -= 30;
+                ///xCoord should increase Xoffset should decrease
+                ///offSet.current -= 30;
                 if (app) {
                     app.style.position = 'relative';
-                    app.style.backgroundPositionX = `${xOffSet.current}px`;
+                    offSet.current[0] -= 30;
+                    app.style.backgroundPositionX = `${offSet.current[0]}px`;
                 }
                 xCoord.current += 30;
                 if (ships) {
@@ -77,13 +104,15 @@ function Ship() {
                 }
             }
         }
+        ///left arrow key press
         if (event.key === 'ArrowLeft') {
             if (ships !== null) {
-                ///xCoord should decrease xOffset increase
-                xOffSet.current += 30;
+                ///xCoord should decrease Xoffset should increase
+                ///offSet.current -= 30;
                 if (app) {
                     app.style.position = 'relative';
-                    app.style.backgroundPositionX = `${xOffSet.current}px`;
+                    offSet.current[0] += 30;
+                    app.style.backgroundPositionX = `${offSet.current[0]}px`;
                 }
                 xCoord.current -= 30;
                 if (ships) {

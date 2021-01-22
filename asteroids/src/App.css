@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Monoton&display=swap');
 html, body {
   overflow: hidden;
   max-width: 100%;
@@ -21,6 +22,7 @@ html, body {
   position: relative;
   top: -300px;
   left: 100px;
+  font-family: Monoton, cursive;
 
 
 }
@@ -63,4 +65,24 @@ html, body {
 #game-board-border {
   background-color: rgb(0,0,0);
   display: block;
+}
+#game-board-border-title {
+  font-family: Monoton, cursive;
+  width: 100%;
+  height: 10vh;
+  color: rgb(182, 57, 57);
+  background-color: black;
+  display: grid;
+  justify-content: center;
+  align-content: center;
+  font-size: 12vh;
+}
+#game-board-border-timer {
+  font-family: Monoton, cursive;
+  color: rgb(255, 228, 228);
+  background-color: black;
+  display: grid;
+  font-size: 10vh;
+  justify-content: center;
+  height: 15vh;
 }

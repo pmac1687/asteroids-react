@@ -2,17 +2,28 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react/react-in-jsx-scope */
 import React, { useRef, useState } from 'react';
+import { MutableRefObject } from 'react';
 ///import ReactDOM from 'react';
 import './App.css';
 import GameMenu from './GameMenu';
 import Ship from './Ship';
 ///import GameMenu from './App';
 
+const colors = ['#08F7FE', '#09FBD3', '#7122FA', '#FF2281', '#011FFD', '#FDF200', '#13CA91', '#FFFF66'];
+
 function App() {
     ///come in and pass random properties for speen andirection and spawn blah when instantiating
     const [show, setShow] = useState(true);
     ///const [enemyCount, setEnemyCount] = useState(4);
     const counts = useRef(0);
+    const speed = useRef([0, 0]);
+    const offSet = useRef([0, 0]);
+    const yCoord = useRef(-300);
+    const xCoord = useRef(100);
+    const timer = useRef(0);
+    const ind = useRef(0);
+    const [clock, setClock] = useState(0);
+    ///const xOffSet = useRef(0);
     ///const [enemyArray, setEnemyArray] = useState<JSX.Element[]>([<div key="2">hello</div>]);
     ///const hello = ['helllo', 'goodbye', 'bye'];
     function onClick() {
@@ -52,13 +63,50 @@ function App() {
     function startInterval() {
         const ids = setInterval(function () {
             moveEnemies(ids);
+            if (speed.current[1] !== 0) {
+                console.log('speed', speed.current[1]);
+                ///decelShip();
+                console.log(document.getElementById('ship'));
+                console.log('sp', speed.current[1]);
+            }
+            timer.current += 1;
+            if (timer.current % 50 === 0) {
+                setClock(timer.current / 50);
+            }
             ///clearInterval(ids);
         }, 18);
     }
+    /*function decelShip() {
+        console.log(blah);
+        ///decel the ship in direction of keydown
+        const ship = document.getElementById('ship')?.style;
+        const app = document.getElementById('App')?.style;
+        console.log(app);
+        if (ship) {
+            ///for yCoord
+            ship.position = 'relative';
+            yCoord.current += (speed.current[1] % 2) * 10;
+            ship.top = `${yCoord.current}px`;
+            ///for xCoord
+            xCoord.current += (speed.current[0] % 2) * 10;
+            ship.left = `${xCoord.current}px`;
+        }
+        if (app) {
+            ///offest in y direction
+            app.position = 'relative';
+            offSet.current[1] -= (speed.current[1] % 2) * 10;
+            app.top = `${offSet.current[1]}px`;
+            ///OFFSET x direction
+            offSet.current[1] -= (speed.current[1] % 2) * 10;
+            app.top = `${offSet.current[1]}px`;
+        }
+        speed.current[1] += speed.current[1] > 0 ? -1 : 1;
+    }*/
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     function moveEnemies(_ids: NodeJS.Timeout) {
         let arr = document.getElementsByClassName('enemy') as HTMLCollectionOf<HTMLElement>;
         let x;
+        console.log('speed', speed.current[1]);
         if (arr) {
             for (x in arr) {
                 /*if (arr.length > 10) {
@@ -123,7 +171,7 @@ function App() {
                 ele.remove();
                 if (document.getElementsByClassName('enemy').length < 10) {
                     populateEnenmies();
-                } else clearInterval(_ids);
+                }
                 ///clearInterval(ids);
                 return false;
             } else return true;
@@ -133,7 +181,7 @@ function App() {
                 ele.remove();
                 if (document.getElementsByClassName('enemy').length < 10) {
                     populateEnenmies();
-                } else clearInterval(_ids);
+                }
                 return false;
             } else return true;
         }
@@ -152,8 +200,8 @@ function App() {
     }
     function getRandStartCoords() {
         ///vh=65 is max for randowm generation?
-        const leftCoord = Math.floor(Math.random() * (500 - 1) + 1);
-        const rightCoord = Math.floor(Math.random() * (500 - 1) + 1);
+        const leftCoord = Math.floor(Math.random() * (800 - 100) + 100);
+        const rightCoord = Math.floor(Math.random() * (800 - 100) + 100);
         return [leftCoord, rightCoord];
     }
     function getRandSize() {
@@ -176,7 +224,7 @@ function App() {
             key: { enemy1 },
         });
         Object.assign(leftSideEnemy.style, {
-            backgroundColor: 'black',
+            backgroundColor: colors[ind.current],
             width: `${eSize1[0]}px`,
             height: `${eSize1[1]}px`,
             position: 'fixed',
@@ -193,7 +241,7 @@ function App() {
             key: { enemy2 },
         });
         Object.assign(rightSideEnemy.style, {
-            backgroundColor: 'black',
+            backgroundColor: colors[ind.current + 1],
             width: `${eSize2[0]}px`,
             height: `${eSize2[1]}px`,
             position: 'fixed',
@@ -202,6 +250,9 @@ function App() {
             right: `${200 + eSize2[0]}px`,
             bottom: `${top2 + eSize2[1]}px`,
         });
+        if (ind.current === 8) {
+            ind.current = 0;
+        } else ind.current += 2;
 
         return [leftSideEnemy, rightSideEnemy];
     }
@@ -222,19 +273,26 @@ function App() {
                     <GameMenu show={show} onClick={onClick} />
                 </div>
                 <div id="game-board-border"></div>
-                <div id="game-board-border"></div>
+                <div id="game-board-border-timer">{clock}</div>
                 <div id="game-board-border"></div>
                 <div id="game-board-border"></div>
                 <div id="game-board">
                     <div id="game-board2"></div>
-                    <Ship />
+                    <Ship offSet={offSet} yCoord={yCoord} xCoord={xCoord} speed={speed} />
                 </div>
                 <div id="game-board-border"></div>
                 <div id="game-board-border"></div>
-                <div id="game-board-border"></div>
+                <div id="game-board-border-title">ASTEROIDS</div>
                 <div id="game-board-border"></div>
             </div>
         </div>
     );
 }
 export default App;
+
+export declare interface AppProps {
+    speed: MutableRefObject<number[]>;
+    offSet: MutableRefObject<number[]>;
+    yCoord: MutableRefObject<number>;
+    xCoord: MutableRefObject<number>;
+}
