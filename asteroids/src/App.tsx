@@ -1,8 +1,7 @@
 /* eslint-disable prefer-const */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react/react-in-jsx-scope */
-import React, { useRef, useState } from 'react';
-import { MutableRefObject } from 'react';
+import React, { MutableRefObject, useRef, useState } from 'react';
 ///import ReactDOM from 'react';
 import './App.css';
 import GameMenu from './GameMenu';
@@ -12,7 +11,7 @@ import shipAll from './images/Spaceship_all.png';
 
 const colors = ['#08F7FE', '#09FBD3', '#7122FA', '#FF2281', '#011FFD', '#FDF200', '#13CA91', '#FFFF66'];
 
-function App() {
+export default function App() {
     ///come in and pass random properties for speen andirection and spawn blah when instantiating
     const [show, setShow] = useState(true);
     ///const [enemyCount, setEnemyCount] = useState(4);
@@ -213,6 +212,12 @@ function App() {
         const rightSize = Math.floor(Math.random() * (30 - 5) + 5);
         return [leftSize, rightSize];
     }
+    function reset() {
+        window.location.reload();
+    }
+    function showCode() {
+        window.location.href = 'https://github.com/pmac1687/asteroids-react/tree/master/asteroids';
+    }
     function getEnemyJSX() {
         const enemy1 = `enemy${counts.current}`;
         const enemy2 = `enemy${counts.current + 1}`;
@@ -273,6 +278,7 @@ function App() {
     return (
         <div className="App">
             <div id="App">
+                <div id="code"></div>
                 <div id="game-menu">
                     <GameMenu show={show} onClick={onClick} />
                 </div>
@@ -288,14 +294,17 @@ function App() {
                 <div id="game-board-border"></div>
                 <div id="game-board-border-timer">{clock}</div>
                 <div style={{ display: 'grid' }} id="game-board-border">
-                    <button className="big-button">See Code</button>
-                    <button className="big-button">Reset Game</button>
+                    <button onClick={showCode} className="big-button">
+                        See Code
+                    </button>
+                    <button onClick={reset} className="big-button">
+                        Reset Game
+                    </button>
                 </div>
             </div>
         </div>
     );
 }
-export default App;
 
 export declare interface AppProps {
     speed: MutableRefObject<number[]>;

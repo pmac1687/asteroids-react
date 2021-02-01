@@ -178,3 +178,17 @@ button.big-button:active::before {
       box-shadow: 0 0 0 2px var(--colorShadeB), 0 0.25em 0 0 var(--colorShadeB);
 
 }
+/* popup */
+#popup {
+  width: 25vw;
+  height: 15vw;
+  background-color: white;
+  margin-top: -50vh;
+  z-index: 0;
+}
+#code {
+  display: none;
+  height: 100vh;
+  width: 100vw;
+  background-color: black;
+}
